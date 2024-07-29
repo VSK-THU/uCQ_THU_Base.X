@@ -18,8 +18,8 @@
 #pragma warning disable 520 // function never called
 #pragma warning disable 373 // implicit signed to unsigned conversion
 
-#include "uCQuick/uCQ_2013.h"
-#include "LCD/LCD_lib_busy.h"
+#include "uCQuick/uCQ_2018.h"
+#include "LCD/GLCDnokia.h"
 #include "demo_functions.h"
 
 #include "PLIB/plib.h"
@@ -35,13 +35,13 @@ void TemplateCode(void)     // Template Code from uC_Quick-X.pdf
 {
     unsigned char counter_1 = 0;
 //--------------------------------------------------------------------- __init()
-    OSCCONbits.IRCF = IRCF_31KHZ;       // defined in uCQ_2013.h
+    OSCCONbits.IRCF = IRCF_31KHZ;       // defined in uCQ_2018.h
     OSCTUNEbits.PLLEN = 0;
     LED_1_TRI = OUTPUT_PIN;             //   ""
 //----------------------------------------------------------------------- main()
     while(1){
         if(++counter_1 == 0){
-            mTOG_LED_1();               // defined in uCQ_2013.h
+            mTOG_LED_1();               // defined in uCQ_2018.h
         }
     }
 }
@@ -420,14 +420,20 @@ void EncoderLEDs(void)
 void EncoderLCD_Text(void)
 {
     unsigned char row = 0;
-    char poem[12][9]= {"Dunkel  ", "wars    ", "der Mond", "schien  ",
-                       "helle.  ", "Als ein ", "Auto    ", "blitze- ",
-                       "schnelle", "langsam ", "um die  ", "Ecke fhr"};
+//    char poem[12][9]= {"Dunkel  ", "wars    ", "der Mond", "schien  ",
+//                       "helle.  ", "Als ein ", "Auto    ", "blitze- ",
+//                       "schnelle", "langsam ", "um die  ", "Ecke fuhr"};
+    
+    char poem[10][15]= { "Dunkel war's, ", "der Mond      ",
+                        "schien helle, ", "schneebedeckt ",
+                        "die grüne Flur", "als ein Wagen ",
+                        "blitzeschnelle", "langsam um die",
+                        "Ecke fuhr     ", "              "};
 //--------------------------------------------------------------------- __init()
     OSCCONbits.IRCF = IRCF_1MHZ; OSCTUNEbits.PLLEN = 0;
-    LCD_Init();
-    LCD_ConstTextOut(0,0,"uC-Quick");
-    LCD_ConstTextOut(1,0," HS-Ulm ");
+    GLCD_Init();
+    GLCD_Text2Out(0,1,"uC-Quick");
+    GLCD_Text2Out(1,1,"  THU   ");
 
     // encoder setup
     ENC_INT_TRI = INPUT_PIN;  ENC_INT_ANS = DIGITAL_PIN;
@@ -439,23 +445,26 @@ void EncoderLCD_Text(void)
     flags.all = 0;
 
     INTCONbits.GIE = 1;
+    while(!(flags.encUp || flags.encDown)); // wait for (any) encoder action 
+    GLCD_Clear(); flags.all = 0;
 //----------------------------------------------------------------------- main()
     while(1){
-        if(flags.encUp){
-            if(row < 10){
-                row++;
-                LCD_TextOut(0,0,&(poem[row][0]));
-                LCD_TextOut(1,0,&(poem[row+1][0]));
+        if(flags.encUp || flags.encDown){
+            if(flags.encUp){
+                if(row < 4) row++;
                 flags.encUp = 0;
             }
-        }
-        if(flags.encDown){
-            if(row > 0){
-                row--;
-                LCD_TextOut(0,0,&(poem[row][0]));
-                LCD_TextOut(1,0,&(poem[row+1][0]));
+            if(flags.encDown){
+                if(row > 0) row--;
                 flags.encDown = 0;
             }
+//            GLCD_Clear();
+            GLCD_TextOut(0,0,&(poem[row][0]));
+            GLCD_TextOut(1,0,&(poem[row+1][0]));
+            GLCD_TextOut(2,0,&(poem[row+2][0]));
+            GLCD_TextOut(3,0,&(poem[row+3][0]));
+            GLCD_TextOut(4,0,&(poem[row+4][0]));
+            GLCD_TextOut(5,0,&(poem[row+5][0]));
         }
     }
 }
@@ -466,9 +475,9 @@ void EncoderLCD_Value(void)
     short value = 0;
 //--------------------------------------------------------------------- __init()
     OSCCONbits.IRCF = IRCF_1MHZ; OSCTUNEbits.PLLEN = 0;
-    LCD_Init();
-    LCD_ConstTextOut(0,0,"uC-Quick");
-    LCD_ConstTextOut(1,0," HS-Ulm ");
+    GLCD_Init();
+    GLCD_Text2Out(0,0,"uC-Quick");
+    GLCD_Text2Out(1,0," HS-Ulm ");
 
     // encoder setup
     ENC_INT_TRI = INPUT_PIN;  ENC_INT_ANS = DIGITAL_PIN;
@@ -484,14 +493,14 @@ void EncoderLCD_Value(void)
     while(1){
         if(flags.encUp){
             value++;
-            LCD_ConstTextOut(1,0,"        ");   // delete old value
-            LCD_ValueOut(1,1,value);
+            GLCD_Text2Out(1,0,"        ");   // delete old value
+            GLCD_Value2Out(1,1,value);
             flags.encUp = 0;
         }
         if(flags.encDown){
             value--;
-            LCD_ConstTextOut(1,0,"        ");   // delete old value
-            LCD_ValueOut(1,1,value);
+            GLCD_Text2Out(1,0,"        ");   // delete old value
+            GLCD_Value2Out(1,1,value);
             flags.encDown = 0;
         }
     }
@@ -510,9 +519,9 @@ void EncoderPolling(void)
                TIMER_GATE_OFF);
     OpenECompare3(COM_INT_ON & ECOM_TRIG_SEVNT & ECCP_3_SEL_TMR12, 16000);
 
-    LCD_Init();
-    LCD_ConstTextOut(0,0,"Enc.Poll");
-    LCD_ConstTextOut(1,3," 0 ");
+    GLCD_Init();
+    GLCD_Text2Out(0,0,"Enc.Poll");
+    GLCD_Text2Out(1,3," 0 ");
 
     ENC_A_TRI = ENC_B_TRI = INPUT_PIN;// encoder setup
     ENC_A_ANS = ENC_B_ANS = DIGITAL_PIN;
@@ -527,14 +536,14 @@ void EncoderPolling(void)
     while(1){
         if(flags.encUp){
             value++;
-            LCD_ConstTextOut(1,0,"        ");   // delete old value
-            LCD_ValueOut(1,3,value);
+            GLCD_Text2Out(1,0,"        ");   // delete old value
+            GLCD_Value2Out(1,3,value);
             flags.encUp = 0;
         }
         if(flags.encDown){
             value--;
-            LCD_ConstTextOut(1,0,"        ");   // delete old value
-            LCD_ValueOut(1,3,value);
+            GLCD_Text2Out(1,0,"        ");   // delete old value
+            GLCD_Value2Out(1,3,value);
             flags.encDown = 0;
         }
     }
@@ -546,7 +555,7 @@ void PWMcounter(void)
     unsigned char counter = 0, compare = 0b00011111;
 //--------------------------------------------------------------------- __init()
     OSCCONbits.IRCF = IRCF_1MHZ; OSCTUNEbits.PLLEN = 0;
-    LCD_Init();LCD_ConstTextOut(0,0,"PWM Cnt");
+    GLCD_Init();GLCD_Text2Out(0,0,"PWM Cnt");
 
     mALL_LED_OUTPUT();
 
@@ -580,7 +589,7 @@ void PWMccpPWM(void)
 {
 //--------------------------------------------------------------------- __init()
     OSCCONbits.IRCF = IRCF_1MHZ; OSCTUNEbits.PLLEN = 0;
-    LCD_Init();LCD_ConstTextOut(0,0,"PWM PWM");
+    GLCD_Init();GLCD_Text2Out(0,0,"PWM PWM");
 
     ENC_INT_TRI = INPUT_PIN;  ENC_INT_ANS = DIGITAL_PIN; // encoder setup
     ENC_DIR_TRI = INPUT_PIN;  ENC_DIR_ANS = DIGITAL_PIN;
@@ -627,7 +636,7 @@ void PWMccpCompare(void)
 {
 //--------------------------------------------------------------------- __init()
     OSCCONbits.IRCF = IRCF_8MHZ; OSCTUNEbits.PLLEN = 1;    // ->32MHz
-    LCD_Init();LCD_ConstTextOut(0,0,"PWM COMPM");
+    GLCD_Init();GLCD_Text2Out(0,0,"PWM COMPM");
 
     ENC_INT_TRI = INPUT_PIN;  ENC_INT_ANS = DIGITAL_PIN; // encoder setup
     ENC_DIR_TRI = INPUT_PIN;  ENC_DIR_ANS = DIGITAL_PIN;
@@ -697,7 +706,7 @@ void AnalogLEDs_PWM(void)
     unsigned char adresult = 0;
 //--------------------------------------------------------------------- __init()
     OSCCONbits.IRCF = IRCF_1MHZ; OSCTUNEbits.PLLEN = 0;
-//    LCD_Init(); LCD_ConstTextOut(0,0,"LEDs PWM");
+//    GLCD_Init(); GLCD_Text2Out(0,0,"LEDs PWM");
     mALL_LED_OUTPUT();;
 
     POTI_TRI = INPUT_PIN; POTI_ANS = ANALOG_PIN;
@@ -727,7 +736,7 @@ void AnalogLED2_COMP(void)
 {
 //--------------------------------------------------------------------- __init()
     OSCCONbits.IRCF = IRCF_8MHZ; OSCTUNEbits.PLLEN = 1;     // ->32MHz
-//    LCD_Init(); LCD_ConstTextOut(0,0,"LED2 CMP");
+//    GLCD_Init(); GLCD_Text2Out(0,0,"LED2 CMP");
 
     mSET_LED_2_OFF();
     LED_2_TRI = OUTPUT_PIN;     // LED2 is connected to CCP2 (RB3)
@@ -768,7 +777,7 @@ void AnalogLED2_PWM(void)
 /* #ifdef __18CXX
     unsigned short oldAdres = 0;
 
-//    LCD_Init(); LCD_ConstTextOut(0,0,"LED2 PWM");
+//    GLCD_Init(); GLCD_Text2Out(0,0,"LED2 PWM");
 //--------------------------------------------------------------------- __init()
     OSCCONbits.IRCF = IRCF_1MHZ;
 
@@ -824,9 +833,9 @@ void AnalogLCD(void)
 
     flags.all = 0;
 
-    LCD_Init();
-    LCD_ConstTextOut(0,0,"SEC     ");
-    LCD_ConstTextOut(1,0,"ADC     ");
+    GLCD_Init();
+    GLCD_Text2Out(0,0,"SEC     ");
+    GLCD_Text2Out(1,0,"ADC     ");
 
     INTCONbits.PEIE = 1;
     INTCONbits.GIE = 1;
@@ -834,12 +843,12 @@ void AnalogLCD(void)
     while(1){
         static unsigned short sec = 0;
         if(flags.newADC){
-            LCD_ConstTextOut(1,4,"     ");   // delete old value
-            LCD_ValueOut_00(1,4,ADRES,4);
+            GLCD_Text2Out(1,4,"     ");   // delete old value
+            GLCD_Value2Out_00(1,4,ADRES,4);
             flags.newADC = 0;
         }
         if(flags.newSec){
-            LCD_ValueOut(0,4,++sec);
+            GLCD_Value2Out(0,4,++sec);
             flags.newSec = 0;
         }
     }
@@ -914,9 +923,9 @@ void Sound_PWM(void){   //PWM   ###TODO -> volume !
 
 //--------------------------------------------------------------------- __init()
     OSCCONbits.IRCF = IRCF_4MHZ; OSCTUNEbits.PLLEN = 0;     // -> 4MHz
-    LCD_Init();
-    LCD_ConstTextOut(0,0,"uC-Quick");
-    LCD_ConstTextOut(1,0," Sound ");
+    GLCD_Init();
+    GLCD_Text2Out(0,0,"uC-Quick");
+    GLCD_Text2Out(1,0," Sound ");
 
     // encoder setup
     ENC_INT_TRI = INPUT_PIN;  ENC_INT_ANS = DIGITAL_PIN;
@@ -943,8 +952,8 @@ void Sound_PWM(void){   //PWM   ###TODO -> volume !
             if(frequency > 15600){frequency = 15600;}
             PR2 = (62500 / frequency) -1;             // 1MHz : 16
             CCPR1L = PR2 >> 1;
-            LCD_ConstTextOut(1,0,"      ");      // delete old value
-            LCD_ValueOut(1,1,frequency);
+            GLCD_Text2Out(1,0,"      ");      // delete old value
+            GLCD_Value2Out(1,1,frequency);
             flags.encUp = 0;
         }
         if(flags.encDown){
@@ -953,8 +962,8 @@ void Sound_PWM(void){   //PWM   ###TODO -> volume !
             if(frequency < 250) {frequency = 250;}
             PR2 = (62500 / frequency)-1;              // 1MHz : 16
             CCPR1L = PR2 >> 1;
-            LCD_ConstTextOut(1,0,"      ");      // delete old value
-            LCD_ValueOut(1,1,frequency);
+            GLCD_Text2Out(1,0,"      ");      // delete old value
+            GLCD_Value2Out(1,1,frequency);
             flags.encDown = 0;
         }
     }
@@ -970,9 +979,9 @@ void Sound_Compare(void){
 
 //--------------------------------------------------------------------- __init()
     OSCCONbits.IRCF = IRCF_1MHZ; OSCTUNEbits.PLLEN = 0;     // -> 1MHz
- * LCD_Init();
-    LCD_ConstTextOut(0,0,"uC-Quick");
-    LCD_ConstTextOut(1,0," Sound ");
+ * GLCD_Init();
+    GLCD_Text2Out(0,0,"uC-Quick");
+    GLCD_Text2Out(1,0," Sound ");
 
     ENC_INT_TRI = INPUT_PIN;    // encoder setup
     ENC_DIR_TRI = INPUT_PIN;
@@ -1005,8 +1014,8 @@ void Sound_Compare(void){
             if(frequency > 65000){frequency = 65000;}
 
             CCPR1 = (F_OSC/2) / frequency;
-            LCD_ConstTextOut(1,0,"      Hz ");      // delete old value
-            LCD_ValueOut(1,1,frequency);
+            GLCD_Text2Out(1,0,"      Hz ");      // delete old value
+            GLCD_Value2Out(1,1,frequency);
             flags.encUp = 0;
         }
         if(flags.encDown){
@@ -1014,8 +1023,8 @@ void Sound_Compare(void){
               else {frequency = frequency - 100;}
             if(frequency < 250) {frequency = 250;}
             CCPR1 = (F_OSC/2) / frequency;
-            LCD_ConstTextOut(1,0,"      Hz ");      // delete old value
-            LCD_ValueOut(1,1,frequency);
+            GLCD_Text2Out(1,0,"      Hz ");      // delete old value
+            GLCD_Value2Out(1,1,frequency);
             flags.encDown = 0;
         }
     }
@@ -1152,9 +1161,9 @@ void TimeMeasure(void)         // CCP1 => RC2
 
     TRISCbits.TRISC2 = INPUT_PIN; ANSELCbits.ANSC2 = DIGITAL_PIN;
 
-    LCD_Init();
-    LCD_ConstTextOut(0,0,"ZeitMess");
-    LCD_ConstTextOut(1,0,"      us");
+    GLCD_Init();
+    GLCD_Text2Out(0,0,"ZeitMess");
+    GLCD_Text2Out(1,0,"      us");
 
     OpenTimer1(TIMER_INT_OFF & T5_16BIT_RW & T1_SOURCE_FOSC_4 &
                T1_PS_1_1 & T1_OSC1EN_OFF & T1_SYNC_EXT_OFF,
@@ -1168,8 +1177,8 @@ void TimeMeasure(void)         // CCP1 => RC2
 //----------------------------------------------------------------------- main()
     while(1){
         if(flags.newCapture){
-            LCD_ConstTextOut(1,0,"      ");   // delete old value
-            LCD_ValueOut(1,0,capture_value);
+            GLCD_Text2Out(1,0,"      ");   // delete old value
+            GLCD_Value2Out(1,0,capture_value);
             flags.newCapture = 0;
         }
     }
@@ -1210,9 +1219,9 @@ void StartStopMenu(void)
     CCPTMRS0bits.C1TSEL = 0;                                // CCP1-TMR2
     OpenTimer2(TIMER_INT_OFF & T2_PS_1_16 & T2_POST_1_1);
 
-    LCD_Init();
-    LCD_ConstTextOut(0,0," ON/OFF ");
-    LCD_ConstTextOut(1,0," ->  <- ");
+    GLCD_Init();
+    GLCD_Text2Out(0,0," ON/OFF ");
+    GLCD_Text2Out(1,0," ->  <- ");
     while(!mGET_ENC_BTN()){;}
     state = S_OFF;
 
@@ -1221,21 +1230,21 @@ void StartStopMenu(void)
 #ifndef DEMO_START_STOP_IPO   // in demo_functions.h
         switch(state){
             case S_OFF:
-                LCD_ConstTextOut(0,0,"  start ");
-                LCD_ConstTextOut(1,0,"-->  <--");
+                GLCD_Text2Out(0,0,"  start ");
+                GLCD_Text2Out(1,0,"-->  <--");
                 SPEAKER_TRI = INPUT_PIN;
                 while(mGET_ENC_BTN()){;}        // ensure released
                 do{;}while(!mGET_ENC_BTN());    // nothing until pressed again
                 state = S_ON;
                 break;
             case S_ON:
-                LCD_ConstTextOut(0,0,"ADC     ");
-                LCD_ConstTextOut(1,0," >stop< ");
+                GLCD_Text2Out(0,0,"ADC     ");
+                GLCD_Text2Out(1,0," >stop< ");
                 SPEAKER_TRI = OUTPUT_PIN;
                 while(mGET_ENC_BTN()){;}        // ensure released
                 do{
                     ADCON0bits.GO = 1; while(ADCON0bits.NOT_DONE){;}
-                    LCD_ValueOut_00(0,4,ADRESH,3);
+                    GLCD_Value2Out_00(0,4,ADRESH,3);
                     if(ADRESH >= 4){
                         PR2 = ADRESH;
                         CCPR1L = PR2 >> 1;
@@ -1252,14 +1261,14 @@ void StartStopMenu(void)
               case S_OFF:
                 state = S_ON;                       // next state ON
                 SPEAKER_TRI = OUTPUT_PIN;           // switch on sound
-                LCD_ConstTextOut(0,0,"ADC     ");
-                LCD_ConstTextOut(1,0," >stop< ");
+                GLCD_Text2Out(0,0,"ADC     ");
+                GLCD_Text2Out(1,0," >stop< ");
                 break;
               case S_ON:
                 state = S_OFF;                      // next state OFF
                 SPEAKER_TRI = INPUT_PIN;            // switch off sound
-                LCD_ConstTextOut(0,0,"  start ");
-                LCD_ConstTextOut(1,0,"-->  <--");
+                GLCD_Text2Out(0,0,"  start ");
+                GLCD_Text2Out(1,0,"-->  <--");
                 break;
               default: break;
             }
@@ -1271,7 +1280,7 @@ void StartStopMenu(void)
           case S_ON:
             ADCON0bits.GO = 1; while(ADCON0bits.NOT_DONE){;}
             if(ADRESH >= 4){
-                LCD_ValueOut_00(0,4,ADRESH,3);
+                GLCD_Value2Out_00(0,4,ADRESH,3);
                 PR2 = ADRESH;
                 CCPR1L = PR2 >> 1;
             }
@@ -1320,9 +1329,9 @@ void ClockMenu(void)
     hours = minutes = seconds = 0;
     menu = CM_HR;                   // Begin with adjusting hours
 
-    LCD_Init();
-    LCD_ConstTextOut(0,0,"hrs. +- ");
-    LCD_ConstTextOut(1,0,"00:00:00");
+    GLCD_Init();
+    GLCD_Text2Out(0,0,"hrs. +- ");
+    GLCD_Text2Out(1,0,"00:00:00");
 
     mENC_IR_RST();
     mENC_IR_EN();
@@ -1359,16 +1368,16 @@ void ClockMenu(void)
 }//------------------------------------------------------------------------Clock
 void setHours(unsigned char* hr)
 {
-    LCD_ConstTextOut(0,0,"hrs. +- ");
+    GLCD_Text2Out(0,0,"hrs. +- ");
     while(!mGET_ENC_BTN()){
         if(flags.encUp){
             if(++*hr >= 24) *hr = 0;
-            LCD_ValueOut_00(1,0,*hr,2);
+            GLCD_Value2Out_00(1,0,*hr,2);
             flags.encUp = 0;
         }
         if(flags.encDown){
             if(--*hr >= 24) *hr = 23;
-            LCD_ValueOut_00(1,0,*hr,2);
+            GLCD_Value2Out_00(1,0,*hr,2);
             flags.encDown = 0;
         }
     }
@@ -1376,16 +1385,16 @@ void setHours(unsigned char* hr)
 }//------------------------------------------------------------------------Clock
 void setMinutes(unsigned char* min)
 {
-    LCD_ConstTextOut(0,0,"min. +- ");
+    GLCD_Text2Out(0,0,"min. +- ");
     while(!mGET_ENC_BTN()){
         if(flags.encUp){
             if(++*min >= 59) *min = 0;
-            LCD_ValueOut_00(1,3,*min,2);
+            GLCD_Value2Out_00(1,3,*min,2);
             flags.encUp = 0;
         }
         if(flags.encDown){
             if(--*min >= 59) *min = 59;
-            LCD_ValueOut_00(1,3,*min,2);
+            GLCD_Value2Out_00(1,3,*min,2);
             flags.encDown = 0;
         }
     }
@@ -1393,16 +1402,16 @@ void setMinutes(unsigned char* min)
 }//------------------------------------------------------------------------Clock
 void setSeconds(unsigned char* sec)
 {
-    LCD_ConstTextOut(0,0,"sec. +- ");
+    GLCD_Text2Out(0,0,"sec. +- ");
     while(!mGET_ENC_BTN()){
         if(flags.encUp){
             if(++*sec >= 59) *sec = 0;
-            LCD_ValueOut_00(1,6,*sec,2);
+            GLCD_Value2Out_00(1,6,*sec,2);
             flags.encUp = 0;
         }
         if(flags.encDown){
             if(--*sec >= 59) *sec = 59;
-            LCD_ValueOut_00(1,6,*sec,2);
+            GLCD_Value2Out_00(1,6,*sec,2);
             flags.encDown = 0;
         }
     }
@@ -1410,7 +1419,7 @@ void setSeconds(unsigned char* sec)
 }//------------------------------------------------------------------------Clock
 void Clock(unsigned char* hr, unsigned char* min, unsigned char* sec)
 {
-    LCD_ConstTextOut(0, 0, "Time:   ");
+    GLCD_Text2Out(0, 0, "Time:   ");
     while (!mGET_ENC_BTN()) {
         if (flags.newSec) {
             if (++*sec >= 60) {
@@ -1420,11 +1429,11 @@ void Clock(unsigned char* hr, unsigned char* min, unsigned char* sec)
                     if (++*hr >= 24) {
                         *hr = 0;
                     }
-                    LCD_ValueOut_00(1, 0, *hr, 2);
+                    GLCD_Value2Out_00(1, 0, *hr, 2);
                 }
-                LCD_ValueOut_00(1, 3, *min, 2);
+                GLCD_Value2Out_00(1, 3, *min, 2);
             }
-            LCD_ValueOut_00(1, 6, *sec, 2);
+            GLCD_Value2Out_00(1, 6, *sec, 2);
             flags.newSec = 0;
         }
     }
@@ -1439,9 +1448,9 @@ void BoardTest(void)
 //--------------------------------------------------------------------- __init()
     OSCCONbits.IRCF = IRCF_4MHZ; OSCTUNEbits.PLLEN = 0;     // -> 4MHz
 
-    LCD_Init();
-    LCD_ConstTextOut(0,0,"MCON-LAB");
-    LCD_ConstTextOut(1,0,"  THU   ");
+    GLCD_Init();
+    GLCD_Text2Out(0,0,"MCON-LAB");
+    GLCD_Text2Out(1,0,"  THU   ");
 
     mALL_LED_OUTPUT();
 
@@ -1504,8 +1513,8 @@ void BoardTest(void)
     while(!mGET_ENC_BTN()){
         if(DataRdy1USART()){TXREG1 = RCREG1 + 1;}
     }
-    LCD_ConstTextOut(0,0,"ADC ??? ");
-    LCD_ConstTextOut(1,0,"PWM ??? ");
+    GLCD_Text2Out(0,0,"ADC ??? ");
+    GLCD_Text2Out(1,0,"PWM ??? ");
 
     flags.all = 0;
     INTCONbits.PEIE = 1;
@@ -1538,8 +1547,8 @@ void BoardTest(void)
             if(frequency > 15600){frequency = 15600;}
             PR2 = (62500 / frequency) -1;   // 1MHz : 16
             CCPR1L = PR2 >> 1;
-            LCD_ConstTextOut(1,4,"    ");   // delete old value
-            LCD_ValueOut(1,4,frequency);
+            GLCD_Text2Out(1,4,"    ");   // delete old value
+            GLCD_Value2Out(1,4,frequency);
             flags.encUp = 0;
         }
         if(flags.encDown){
@@ -1548,14 +1557,14 @@ void BoardTest(void)
             if(frequency < 250) {frequency  = 250;}
             PR2 = (62500 / frequency)-1;    // 1MHz : 16
             CCPR1L = PR2 >> 1;
-            LCD_ConstTextOut(1,4,"    ");   // delete old value
-            LCD_ValueOut(1,4,frequency);
+            GLCD_Text2Out(1,4,"    ");   // delete old value
+            GLCD_Value2Out(1,4,frequency);
             flags.encDown = 0;
         }
     //---------------------------------------------------------------- check ADC
         if(flags.newADC){
-            LCD_ConstTextOut(0,4,"    ");   // delete old value
-            LCD_ValueOut(0,4,ADRES);
+            GLCD_Text2Out(0,4,"    ");   // delete old value
+            GLCD_Value2Out(0,4,ADRES);
             flags.newADC = 0;
         }
     //-------------------------------------------------------------- check USART
@@ -1578,9 +1587,9 @@ void MacroTest(void){
 //--------------------------------------------------------------------- __init()
     OSCCONbits.IRCF = IRCF_4MHZ; OSCTUNEbits.PLLEN = 0;     // -> 4MHz
 
-    LCD_Init();
-    LCD_ConstTextOut(0,0,"MCON-LAB");
-    LCD_ConstTextOut(1,0,"MacrTest");
+    GLCD_Init();
+    GLCD_Text2Out(0,0,"MCON-LAB");
+    GLCD_Text2Out(1,0,"MacrTest");
 
     mALL_LED_OUTPUT();
 

@@ -14,7 +14,7 @@
 //####################################################################
 
 //#define DEMO_TEMPLATE_CODE      // Template Code from uC_Quick-X.pdf
-#define DEMO_BOARD_TEST         // function test (all) components
+//#define DEMO_BOARD_TEST         // function test (all) components
 //#define DEMO_TEST_LEDS          // LEDs in Debug-Mode (single step) ON/OFF
 //#define DEMO_BTN_LEDS           // encoder button switch on LED_1/2/3/4
 //#define DEMO_BTN_RANDOM_LEDS    // encoder button switches LEDs randomly
@@ -27,7 +27,7 @@
 //#define DEMO_BLINK_TMR_FLAG     // timing using timer0 module (polling flag)
 //#define DEMO_BLINK_TMR_IR       // timing using timer0 module (interrupt)
 //#define DEMO_ENCODER_LEDS       // encoder "rotates" LEDs
-//#define DEMO_ENCODER_LCD_TEXT   // encoder controls text on LCD Display
+#define DEMO_ENCODER_LCD_TEXT   // encoder controls text on LCD Display
 //#define DEMO_ENCODER_LCD_VALUE  // encoder controls values on LCD Display
 //#define DEMO_ENCODER_POLLING    // encoder signals polled during timer IR
 //#define DEMO_PWM_COUNTER        // a counter is incremented in main loop

@@ -8,17 +8,17 @@
 //  Author:             V.SchK
 //  Company:            THU-Ulm
 //
-//  Revision:           3.0 (XC8 C99 version)
-//  Date:               May 2019
-//  Assembled using     XC8 2.00+
+//  Revision:           4.0 (uCQ_2018 Board)
+//  Date:               July 2024
+//  Assembled using     XC8 2.40+
 //
 //  todo    - add comments ;-)
 //          -
 //
 //##############################################################################
 
-#include "uCQuick/uCQ_2013.h"
-#include "LCD/LCD_lib_busy.h"
+#include "uCQuick/uCQ_2018.h"
+#include "LCD/GLCDnokia.h"
 #include "demo_functions.h"
 
 //--- P R I V A T E   P R O T O T Y P E S --------------------------------------
