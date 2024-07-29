@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>com.microchip.mplab.nbide.embedded.makeproject</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/make-project/1">
+            <name>uCQ_THU_Base</name>
+            <creation-uuid>fa8a89e1-c72f-4d31-b192-b152d0635b1d</creation-uuid>
+            <make-project-type>0</make-project-type>
+            <c-extensions>c</c-extensions>
+            <cpp-extensions/>
+            <header-extensions>h</header-extensions>
+            <sourceEncoding>ISO-8859-1</sourceEncoding>
+            <asminc-extensions/>
+            <make-dep-projects/>
+            <sourceRootList>
+                <sourceRootElem>../../C-LIB/HS-Ulm/MPU6000</sourceRootElem>
+                <sourceRootElem>../../C-LIB/HS-Ulm/GPS</sourceRootElem>
+                <sourceRootElem>../../C-LIB/HS-Ulm/HSUprot</sourceRootElem>
+                <sourceRootElem>../../C-LIB/HS-Ulm/LCD</sourceRootElem>
+                <sourceRootElem>../../C-LIB/HS-Ulm/uCQuick</sourceRootElem>
+                <sourceRootElem>../../C-LIB/HS-Ulm/PLIB</sourceRootElem>
+                <sourceRootElem>.</sourceRootElem>
+            </sourceRootList>
+            <confList>
+                <confElem>
+                    <name>SIM_XC8_25K22_C99</name>
+                    <type>2</type>
+                </confElem>
+                <confElem>
+                    <name>XC8_2_00_C99</name>
+                    <type>2</type>
+                </confElem>
+            </confList>
+            <formatting>
+                <project-formatting-style>false</project-formatting-style>
+            </formatting>
+        </data>
+    </configuration>
+</project>
