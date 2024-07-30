@@ -13,8 +13,9 @@
 //# (if you select more than one -> the first one will be executed)  #
 //####################################################################
 
-//#define DEMO_TEMPLATE_CODE      // Template Code from uC_Quick-X.pdf
 //#define DEMO_BOARD_TEST         // function test (all) components
+
+//#define DEMO_TEMPLATE_CODE      // Template Code from uC_Quick-X.pdf
 //#define DEMO_TEST_LEDS          // LEDs in Debug-Mode (single step) ON/OFF
 //#define DEMO_BTN_LEDS           // encoder button switch on LED_1/2/3/4
 //#define DEMO_BTN_RANDOM_LEDS    // encoder button switches LEDs randomly
@@ -27,7 +28,7 @@
 //#define DEMO_BLINK_TMR_FLAG     // timing using timer0 module (polling flag)
 //#define DEMO_BLINK_TMR_IR       // timing using timer0 module (interrupt)
 //#define DEMO_ENCODER_LEDS       // encoder "rotates" LEDs
-#define DEMO_ENCODER_LCD_TEXT   // encoder controls text on LCD Display
+//#define DEMO_ENCODER_LCD_TEXT   // encoder controls text on LCD Display
 //#define DEMO_ENCODER_LCD_VALUE  // encoder controls values on LCD Display
 //#define DEMO_ENCODER_POLLING    // encoder signals polled during timer IR
 //#define DEMO_PWM_COUNTER        // a counter is incremented in main loop
@@ -44,11 +45,11 @@
 //#define DEMO_RS232_TX           // Send serial data
 //#define DEMO_RS232_RX           // Receive serial data
 //#define DEMO_MINI_RS232         // Serial Communication (both Directions)
-//#define DEMO_TIME_MEASURE       // measure time between two neg. edges [us]
+//#define DEMO_TIME_MEASURE       // measure time between two pos. edges [us]
 //#define DEMO_START_STOP_MENU    // simple start-stop state machine
 //#define DEMO_START_STOP_IPO     // start-stop state machine IPO model
 //#define DEMO_CLOCK_MENU         // LCD Clock with menu for setting
-//#define DEMO_MAKRO_TEST         //
+#define DEMO_MAKRO_TEST         //
 
 ////TODO    Reaktionstest();        // Blink_Counter-> game
 ////TODO    Blink_Interrupt();      // timing with timer and CCP modules (IR)
@@ -56,14 +57,15 @@
 ////TODO    FreqMess();             // measure frequency (1s)
 ////TODO    FunctionPointers();
 
-#if defined(DEMO_TEMPLATE_CODE)
-    #define DEMO_FUNCTION()     TemplateCode()
-#elif defined(DEMO_BOARD_TEST)
+#if defined(DEMO_BOARD_TEST)
     #define DEMO_FUNCTION()     BoardTest()
     #define USE_ENCODER_IR
     #define USE_ADC_IR
     #define _XTAL_FREQ          4000000
     #define BAUDRATE            19200
+
+#elif defined(DEMO_TEMPLATE_CODE)
+    #define DEMO_FUNCTION()     TemplateCode()
 #elif defined(DEMO_TEST_LEDS)
     #define DEMO_FUNCTION()     TestLEDs()
 #elif defined(DEMO_BTN_LEDS)
@@ -180,6 +182,7 @@
     #define _XTAL_FREQ          2000000
 #elif defined(DEMO_MAKRO_TEST)
     #define DEMO_FUNCTION()     MacroTest()
+    #define USE_ENCODER_IR
 //#elif defined(DEMO_)
 //    #define DEMO_FUNCTION()
 #endif
