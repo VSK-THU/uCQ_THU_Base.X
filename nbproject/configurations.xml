@@ -5,8 +5,9 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="LIB" projectFiles="true">
-        <itemPath>../../C-LIB/HS-Ulm/PLIB/plib18fxxk22.h</itemPath>
-        <itemPath>../../C-LIB/HS-Ulm/PLIB/plib.h</itemPath>
+        <itemPath>../_C_LIB/THU/PLIB/plib.h</itemPath>
+        <itemPath>../_C_LIB/THU/PLIB/plib18fxxk22.h</itemPath>
+        <itemPath>../_C_LIB/THU/uCQuick/uCQ_2018.h</itemPath>
       </logicalFolder>
       <itemPath>demo_functions.h</itemPath>
       <itemPath>glcdNokia_config.h</itemPath>
@@ -25,11 +26,11 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="LIB" projectFiles="true">
-        <itemPath>../../C-LIB/HS-Ulm/PLIB/plib18fxxk22.c</itemPath>
         <itemPath>../_C_LIB/THU/LCD/charSet16x7.c</itemPath>
         <itemPath>../_C_LIB/THU/LCD/charSet8x5.c</itemPath>
         <itemPath>../_C_LIB/THU/LCD/GLCDnokia.c</itemPath>
         <itemPath>../_C_LIB/THU/LCD/hsulm_logo.c</itemPath>
+        <itemPath>../_C_LIB/THU/PLIB/plib18fxxk22.c</itemPath>
       </logicalFolder>
       <itemPath>uC_main.c</itemPath>
       <itemPath>uC_interrupt.c</itemPath>
@@ -38,14 +39,10 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>../../C-LIB/HS-Ulm/MPU6000</Elem>
-    <Elem>../../C-LIB/HS-Ulm/GPS</Elem>
-    <Elem>../../C-LIB/HS-Ulm/HSUprot</Elem>
-    <Elem>../../C-LIB/HS-Ulm/LCD</Elem>
-    <Elem>../../C-LIB/HS-Ulm/uCQuick</Elem>
-    <Elem>../../C-LIB/HS-Ulm/PLIB</Elem>
     <Elem>.</Elem>
     <Elem>../_C_LIB/THU/LCD</Elem>
+    <Elem>../_C_LIB/THU/PLIB</Elem>
+    <Elem>../_C_LIB/THU/uCQuick</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -90,30 +87,6 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
-      <item path="../../C-LIB/HS-Ulm/PLIB/plib18fxxk22.c"
-            ex="false"
-            overriding="false">
-        <HI-TECH-COMP>
-        </HI-TECH-COMP>
-        <HI-TECH-LINK>
-        </HI-TECH-LINK>
-        <XC8-CO>
-        </XC8-CO>
-        <XC8-config-global>
-        </XC8-config-global>
-      </item>
-      <item path="../../C-LIB/HS-Ulm/PLIB/plib18fxxk22.h"
-            ex="false"
-            overriding="false">
-        <HI-TECH-COMP>
-        </HI-TECH-COMP>
-        <HI-TECH-LINK>
-        </HI-TECH-LINK>
-        <XC8-CO>
-        </XC8-CO>
-        <XC8-config-global>
-        </XC8-config-global>
-      </item>
       <HI-TECH-COMP>
         <property key="additional-warnings" value="true"/>
         <property key="asmlist" value="true"/>
@@ -150,7 +123,6 @@
       </HI-TECH-COMP>
       <HI-TECH-LINK>
         <property key="additional-options-checksum" value=""/>
-        <property key="additional-options-checksumAVR" value=""/>
         <property key="additional-options-code-offset" value=""/>
         <property key="additional-options-command-line" value=""/>
         <property key="additional-options-errata" value=""/>
@@ -201,7 +173,6 @@
         <property key="codecoverage.outputfile" value=""/>
         <property key="debugoptions.debug-startup" value="Use system settings"/>
         <property key="debugoptions.reset-behaviour" value="Use system settings"/>
-        <property key="event.recorder.debugger.behavior" value="Running"/>
         <property key="event.recorder.enabled" value="false"/>
         <property key="event.recorder.scvd.files" value=""/>
         <property key="lastid" value=""/>
@@ -1180,13 +1151,13 @@
         <property key="wpo-lto" value="false"/>
       </XC8-config-global>
     </conf>
-    <conf name="XC8_2_00_C99" type="2">
+    <conf name="PicKit3_XC8_C99" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <targetDevice>PIC18F24K22</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>PICkit3PlatformTool</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>XC8</languageToolchain>
         <languageToolchainVersion>2.46</languageToolchainVersion>
         <platform>3</platform>
@@ -1221,30 +1192,6 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
-      <item path="../../C-LIB/HS-Ulm/PLIB/plib18fxxk22.c"
-            ex="false"
-            overriding="false">
-        <HI-TECH-COMP>
-        </HI-TECH-COMP>
-        <HI-TECH-LINK>
-        </HI-TECH-LINK>
-        <XC8-CO>
-        </XC8-CO>
-        <XC8-config-global>
-        </XC8-config-global>
-      </item>
-      <item path="../../C-LIB/HS-Ulm/PLIB/plib18fxxk22.h"
-            ex="false"
-            overriding="false">
-        <HI-TECH-COMP>
-        </HI-TECH-COMP>
-        <HI-TECH-LINK>
-        </HI-TECH-LINK>
-        <XC8-CO>
-        </XC8-CO>
-        <XC8-config-global>
-        </XC8-config-global>
-      </item>
       <HI-TECH-COMP>
         <property key="additional-warnings" value="true"/>
         <property key="asmlist" value="true"/>
@@ -1281,7 +1228,6 @@
       </HI-TECH-COMP>
       <HI-TECH-LINK>
         <property key="additional-options-checksum" value=""/>
-        <property key="additional-options-checksumAVR" value=""/>
         <property key="additional-options-code-offset" value=""/>
         <property key="additional-options-command-line" value=""/>
         <property key="additional-options-errata" value=""/>
@@ -1336,7 +1282,6 @@
         <property key="debugoptions.debug-startup" value="Use system settings"/>
         <property key="debugoptions.reset-behaviour" value="Use system settings"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
-        <property key="event.recorder.debugger.behavior" value="Running"/>
         <property key="event.recorder.enabled" value="false"/>
         <property key="event.recorder.scvd.files" value=""/>
         <property key="hwtoolclock.frcindebug" value="false"/>

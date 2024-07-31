@@ -13,14 +13,10 @@
             <asminc-extensions/>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>../../C-LIB/HS-Ulm/MPU6000</sourceRootElem>
-                <sourceRootElem>../../C-LIB/HS-Ulm/GPS</sourceRootElem>
-                <sourceRootElem>../../C-LIB/HS-Ulm/HSUprot</sourceRootElem>
-                <sourceRootElem>../../C-LIB/HS-Ulm/LCD</sourceRootElem>
-                <sourceRootElem>../../C-LIB/HS-Ulm/uCQuick</sourceRootElem>
-                <sourceRootElem>../../C-LIB/HS-Ulm/PLIB</sourceRootElem>
                 <sourceRootElem>.</sourceRootElem>
                 <sourceRootElem>../_C_LIB/THU/LCD</sourceRootElem>
+                <sourceRootElem>../_C_LIB/THU/PLIB</sourceRootElem>
+                <sourceRootElem>../_C_LIB/THU/uCQuick</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
@@ -28,7 +24,7 @@
                     <type>2</type>
                 </confElem>
                 <confElem>
-                    <name>XC8_2_00_C99</name>
+                    <name>PicKit3_XC8_C99</name>
                     <type>2</type>
                 </confElem>
             </confList>
