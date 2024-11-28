@@ -419,11 +419,7 @@ void EncoderLEDs(void)
 //##############################################################################
 void EncoderLCD_Text(void)
 {
-    unsigned char row = 0;
-//    char poem[12][9]= {"Dunkel  ", "wars    ", "der Mond", "schien  ",
-//                       "helle.  ", "Als ein ", "Auto    ", "blitze- ",
-//                       "schnelle", "langsam ", "um die  ", "Ecke fuhr"};
-
+    int8_t row = -1;
     char poem[10][15]= {"Dunkel war's, ", "der Mond      ",
                         "schien helle, ", "schneebedeckt ",
                         "die grüne Flur", "als ein Wagen ",
@@ -445,20 +441,19 @@ void EncoderLCD_Text(void)
     flags.all = 0;
 
     INTCONbits.GIE = 1;
-    while(!(flags.encUp || flags.encDown)); // wait for (any) encoder action
-    GLCD_Clear(); flags.all = 0;
+//    while(!(flags.encUp || flags.encDown)); // wait for (any) encoder action
+//    GLCD_Clear(); flags.all = 0;
 //----------------------------------------------------------------------- main()
     while(1){
         if(flags.encUp || flags.encDown){
             if(flags.encUp){
-                if(row < 4) row++;
+                if(row < 4) row++; else row = 4;
                 flags.encUp = 0;
             }
             if(flags.encDown){
-                if(row > 0) row--;
+                if(row > 0) row--; else row = 0;
                 flags.encDown = 0;
             }
-//            GLCD_Clear();
             GLCD_TextOut(0,0,&(poem[row][0]));
             GLCD_TextOut(1,0,&(poem[row+1][0]));
             GLCD_TextOut(2,0,&(poem[row+2][0]));
